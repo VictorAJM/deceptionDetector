@@ -64,11 +64,13 @@ if __name__ == '__main__':
     os.makedirs(out_dir, exist_ok=True)
 
     vidinfos = []
+    cnt=_cnt=0 #1680
     with open(csv_file, 'r', encoding='utf-8') as f:
         reader = csv.reader(f)
         for row in reader:
-            if len(row) == 5:
+            if len(row) == 5 and cnt<_cnt+30:
                 vidinfos.append(VidInfo(*row, out_dir))
+                cnt += 1
 
     with open('bad_files_a.txt', 'w', encoding='utf-8') as bad_files:
         results = ThreadPool(20).imap_unordered(download, vidinfos)

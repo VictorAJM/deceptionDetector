@@ -73,8 +73,8 @@ if __name__ == '__main__':
             if len(row) == 5:
                 yt_id, file_name, start_time, end_time, _ = row
                 video_clips[yt_id].append(VidClip(file_name, start_time, end_time, out_dir))
-    
+    video_clips = list(video_clips.items())[:15]
     with open('bad_files_a.txt', 'w', encoding='utf-8') as bad_files:
-        results = ThreadPool(5).imap_unordered(lambda item: process_video(item[0], item[1], out_dir), video_clips.items())
+        results = ThreadPool(5).imap_unordered(lambda item: process_video(item[0], item[1], out_dir), video_clips)
         for cnt, r in enumerate(results, start=1):
             print(f"{cnt}/{len(video_clips)} processed")

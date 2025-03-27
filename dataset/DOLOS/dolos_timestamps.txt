@@ -352,7 +352,7 @@ L2dK_5Zg5Rg,YW_WILTY_EP45_lie19,19:19,19:24,deception
 LPs5nlYYQck,YW_WILTY_EP46_lie1,2:30,2:33,deception
 LPs5nlYYQck,YW_WILTY_EP46_lie2,2:42,2:46,deception
 LPs5nlYYQck,YW_WILTY_EP46_truth1,6:47,6:53,truth
-LPs5nlYYQck,YW_WILTY_EP46_truth1,9:05,9:09,truth
+LPs5nlYYQck,YW_WILTY_EP46_truth2,9:05,9:09,truth
 LPs5nlYYQck,YW_WILTY_EP46_lie3,11:06,11:14,deception
 LPs5nlYYQck,YW_WILTY_EP46_lie4,11:30,11:34,deception
 LPs5nlYYQck,YW_WILTY_EP46_lie5,11:49,11:57,deception

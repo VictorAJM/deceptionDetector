@@ -1,9 +1,0 @@
-
-Optimizer and LR = Adam, 0.001
-Batch Size = 16
-Epochs = 10
-Num Encoders = 4
-Adapter = True
-Adapter Type = efficient_conv
-------------------------------------------
-------------------------------------------

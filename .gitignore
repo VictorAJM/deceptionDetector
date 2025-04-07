@@ -1,3 +1,5 @@
 dataset/rgb_frames/*
 dataset/face_frames/*
 dataset/audio_files/*
+
+magic/best_model_*

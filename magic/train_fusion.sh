@@ -1,11 +1,11 @@
 CUDA_VISIBLE_DEVICES=0 python train_test.py \
   --batch_size=16 \
-  --model_to_train "fusion" \
+  --model_to_train "audio" \
   --fusion_type "cross2" \
   --adapter \
   --num_encoders=4 \
   --adapter_type="efficient_conv" \
-  --num_epochs=10 \
+  --num_epochs=1 \
   --lr=1e-3 \
   --seed=123 \
   --data_root 'C:/Users/victo/deceptionDetector/dataset/DOLOS/' \

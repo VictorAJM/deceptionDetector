@@ -135,8 +135,7 @@ def train_one_epoch(args, train_data_loader, model, optimizer, loss_fn, loss_aud
             epoch_predictions.append(torch.argmax(preds, dim=1))
             epoch_labels.append(labels)
 
-            if i % 10 == 0:
-                print("iter {}, loss {:.5f}".format(str(i), loss))
+            print("iter {}, loss {:.5f}".format(str(i), loss))
     elif args.model_to_train == "vision":
 
         ###Iterating over data loader
@@ -162,8 +161,7 @@ def train_one_epoch(args, train_data_loader, model, optimizer, loss_fn, loss_aud
             epoch_predictions.append(torch.argmax(preds, dim=1))
             epoch_labels.append(labels)
 
-            if i % 10 == 0:
-                print("iter {}, loss {:.5f}".format(str(i), loss))
+            print("iter {}, loss {:.5f}".format(str(i), loss))
 
     else:  # fusion models
         for i, (waves, faces, labels) in enumerate(train_data_loader):
@@ -321,6 +319,9 @@ def evaluation_multi(labels, preds, labels2, preds2):
         auc_2[i] = auc(fpr, tpr)
     return acc, f1, auc_score, acc2, f1_2, auc_2
 
+def save_model(model, save_path):
+    torch.save(model.state_dict(), save_path)
+    print(f"Model saved to {save_path}")
 
 def train_test(log_name, args):
     f = open(log_name, 'a')
@@ -420,6 +421,12 @@ def train_test(log_name, args):
                 results = "best results are acc {:.5f}, f1: {:.5f}, auc:{:.5f} ".format(val_acc, val_f1, val_auc)
                 val_results = classification_report(val_lables.cpu().numpy(), val_preds.cpu().numpy(),
                                                     target_names=["truth", "deception"])
+                
+                # Save the best model
+                model_save_path = os.path.join("", f"best_model_{args.model_to_train}.pth")
+                save_model(model, model_save_path)
+                
+                
         print("results:\n\n")
         print(results)
         f.write("****************\n")

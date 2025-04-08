@@ -5,7 +5,7 @@ CUDA_VISIBLE_DEVICES=0 python train_test.py \
   --adapter \
   --num_encoders=4 \
   --adapter_type="efficient_conv" \
-  --num_epochs=1 \
+  --num_epochs=20 \
   --lr=1e-3 \
   --seed=123 \
   --data_root 'C:/Users/victo/deceptionDetector/dataset/DOLOS/' \

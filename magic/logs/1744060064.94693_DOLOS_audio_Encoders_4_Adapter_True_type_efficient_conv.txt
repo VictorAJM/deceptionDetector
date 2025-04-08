@@ -1,0 +1,44 @@
+
+Optimizer and LR = Adam, 0.001
+Batch Size = 16
+Epochs = 20
+Num Encoders = 4
+Adapter = True
+Adapter Type = efficient_conv
+------------------------------------------
+------------------------------------------
+
+Train file = train_fold3
+Test file = test_fold3epoch 0, test_acc 0.56032, test_f1: 0.70609, test_auc:0.50788
+epoch 1, test_acc 0.54692, test_f1: 0.67562, test_auc:0.50642
+epoch 2, test_acc 0.54424, test_f1: 0.50581, test_auc:0.56179
+epoch 3, test_acc 0.51475, test_f1: 0.51989, test_auc:0.52104
+epoch 4, test_acc 0.55764, test_f1: 0.67583, test_auc:0.52124
+epoch 5, test_acc 0.55228, test_f1: 0.68190, test_auc:0.51055
+epoch 6, test_acc 0.52815, test_f1: 0.63786, test_auc:0.49886
+epoch 7, test_acc 0.56568, test_f1: 0.68846, test_auc:0.52579
+epoch 8, test_acc 0.55228, test_f1: 0.69131, test_auc:0.50530
+epoch 9, test_acc 0.55496, test_f1: 0.70979, test_auc:0.49784
+epoch 10, test_acc 0.54155, test_f1: 0.64151, test_auc:0.51542
+epoch 11, test_acc 0.46917, test_f1: 0.18852, test_auc:0.51844
+epoch 12, test_acc 0.54424, test_f1: 0.50581, test_auc:0.56179
+epoch 13, test_acc 0.50134, test_f1: 0.42593, test_auc:0.52483
+epoch 14, test_acc 0.54960, test_f1: 0.52273, test_auc:0.56461
+epoch 15, test_acc 0.54692, test_f1: 0.61327, test_auc:0.53399
+epoch 16, test_acc 0.55764, test_f1: 0.65696, test_auc:0.53043
+epoch 17, test_acc 0.53619, test_f1: 0.53619, test_auc:0.54411
+epoch 18, test_acc 0.53619, test_f1: 0.52078, test_auc:0.54805
+epoch 19, test_acc 0.58177, test_f1: 0.60406, test_auc:0.58347
+****************
+best results are acc 0.58177, f1: 0.60406, auc:0.58347 
+
+              precision    recall  f1-score   support
+
+       truth       0.52      0.60      0.56       164
+   deception       0.64      0.57      0.60       209
+
+    accuracy                           0.58       373
+   macro avg       0.58      0.58      0.58       373
+weighted avg       0.59      0.58      0.58       373
+
+

@@ -1,0 +1,12 @@
+
+Optimizer and LR = Adam, 0.001
+Batch Size = 16
+Epochs = 4
+Num Encoders = 4
+Adapter = True
+Adapter Type = efficient_conv
+------------------------------------------
+------------------------------------------
+
+Train file = train_fold3
+Test file = test_fold3epoch 0, test_acc 0.56032, test_f1: 0.71821, test_auc:0.50000

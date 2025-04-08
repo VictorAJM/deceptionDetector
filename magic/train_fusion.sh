@@ -1,6 +1,6 @@
 CUDA_VISIBLE_DEVICES=0 python train_test.py \
   --batch_size=16 \
-  --model_to_train "audio" \
+  --model_to_train "vision" \
   --fusion_type "cross2" \
   --adapter \
   --num_encoders=4 \

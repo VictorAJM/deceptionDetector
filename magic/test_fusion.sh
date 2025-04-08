@@ -24,7 +24,7 @@ FUSION_TYPE="cross2"             # Tipo de fusión (solo para modelo fusion)
 mkdir -p results
 
 # Nombre del archivo de resultados (basado en el archivo de prueba)
-RESULT_FILE="results/eval_results_${TEST_FILE%.*}.txt"
+RESULT_FILE="results/eval_results__${MODEL_TYPE}.txt"
 
 # Comando de evaluación
 python test_model.py \

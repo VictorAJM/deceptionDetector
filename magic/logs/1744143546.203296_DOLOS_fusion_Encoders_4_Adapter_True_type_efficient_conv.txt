@@ -1,0 +1,29 @@
+
+Optimizer and LR = Adam, 0.001
+Batch Size = 16
+Epochs = 5
+Num Encoders = 4
+Adapter = True
+Adapter Type = efficient_conv
+------------------------------------------
+------------------------------------------
+
+Train file = train_fold3
+Test file = test_fold3epoch 0, test_acc 0.46917, test_f1: 0.17500, test_auc:0.51975
+epoch 1, test_acc 0.56032, test_f1: 0.71821, test_auc:0.50000
+epoch 2, test_acc 0.56568, test_f1: 0.71972, test_auc:0.50675
+epoch 3, test_acc 0.56300, test_f1: 0.63371, test_auc:0.54769
+epoch 4, test_acc 0.56032, test_f1: 0.71821, test_auc:0.50000
+****************
+best results are acc 0.56568, f1: 0.71972, auc:0.50675 
+
+              precision    recall  f1-score   support
+
+       truth       0.75      0.02      0.04       164
+   deception       0.56      1.00      0.72       209
+
+    accuracy                           0.57       373
+   macro avg       0.66      0.51      0.38       373
+weighted avg       0.65      0.57      0.42       373
+
+

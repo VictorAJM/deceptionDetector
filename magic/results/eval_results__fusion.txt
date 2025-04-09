@@ -1,5 +1,4 @@
-Test File: test_fold3.csv
-Model: fusion
+Modelo cargado desde best_model_fusion.pth
 Accuracy: 0.5657
 F1 Score: 0.7197
 AUC: 0.5068
@@ -12,3 +11,6 @@ Classification Report:
     accuracy                           0.57       373
    macro avg       0.66      0.51      0.38       373
 weighted avg       0.65      0.57      0.42       373
+
+Resultados guardados en results\eval_results_test_fold3.csv.txt
+

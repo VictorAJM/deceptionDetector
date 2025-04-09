@@ -1,0 +1,15 @@
+Modelo cargado desde best_model_vision.pth
+Accuracy: 0.5603
+F1 Score: 0.7182
+AUC: 0.5000
+Classification Report:
+              precision    recall  f1-score   support
+
+       truth       0.00      0.00      0.00       164
+   deception       0.56      1.00      0.72       209
+
+    accuracy                           0.56       373
+   macro avg       0.28      0.50      0.36       373
+weighted avg       0.31      0.56      0.40       373
+
+Resultados guardados en results\eval_results_test_fold3.csv.txt

@@ -4,8 +4,8 @@
 
 # Configuración básica
 DEVICE="cuda:0"                  # Dispositivo para evaluación (cuda:0, cpu)
-MODEL_TYPE="audio"              # Tipo de modelo (audio, vision, fusion)
-MODEL_PATH="best_model_audio.pth"  # Ruta al modelo guardado
+MODEL_TYPE="fusion"              # Tipo de modelo (audio, vision, fusion)
+MODEL_PATH="best_model_fusion.pth"  # Ruta al modelo guardado
 TEST_FILE="test_fold3.csv"       # Archivo CSV de prueba
 BATCH_SIZE=16                    # Tamaño del lote
 DATA_ROOT="C:/Users/victo/deceptionDetector/dataset/DOLOS/"  # Directorio raíz de datos

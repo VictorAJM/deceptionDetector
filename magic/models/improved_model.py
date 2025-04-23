@@ -10,59 +10,47 @@ class ImprovedCrossFusionModule(nn.Module):
     """
     def __init__(self, dim=256):
         super(ImprovedCrossFusionModule, self).__init__()
-        
-        # Projections with layer normalization
-        self.project_audio = nn.Sequential(
-            nn.Linear(1024, dim),
-            nn.LayerNorm(dim)
-        )
-        self.project_vision = nn.Sequential(
-            nn.Linear(768, dim),
-            nn.LayerNorm(dim))
-        
-        # Attention mechanisms
-        self.audio_attention = nn.MultiheadAttention(dim, num_heads=4)
-        self.visual_attention = nn.MultiheadAttention(dim, num_heads=4)
-        
-        # Dynamic modality weighting
-        self.modality_weights = nn.Parameter(torch.tensor([0.5, 0.5]))
-        
-        # Bottleneck
-        self.bottleneck = nn.Sequential(
-            nn.Linear(dim * 2, dim),
-            nn.GELU(),
-            nn.Dropout(0.1))
+        # linear project + norm + corr + concat + conv_layer + tanh
+        self.project_audio = nn.Linear(768, dim)  # linear projection
+        self.project_vision = nn.Linear(768, dim)
+        self.corr_weights = torch.nn.Parameter(torch.empty(
+            dim, dim, requires_grad=True).type(torch.cuda.FloatTensor))
+        nn.init.xavier_normal_(self.corr_weights)
+        self.project_bottleneck = nn.Sequential(nn.Linear(dim * 2, 64),
+                                                nn.LayerNorm((64,), eps=1e-05, elementwise_affine=True),
+                                                nn.ReLU())
     
     def forward(self, audio_feat, visual_feat):
-        # Project features to common space
-        audio_proj = self.project_audio(audio_feat)
-        visual_proj = self.project_vision(visual_feat)
+        """
+
+        :param audio_feat: [batchsize 64 768]
+        :param visual_feat:[batchsize 64 768]
+        :return: fused feature
+        """
+        audio_feat = self.project_audio(audio_feat)
+        visual_feat = self.project_vision(visual_feat)
+
+        # Compute correlation matrix
+        a1 = torch.matmul(audio_feat, self.corr_weights)  # [batchsize, dim]
+        cc_mat = torch.matmul(a1, visual_feat.transpose(0, 1))  # [batchsize, batchsize]
         
-        # Cross-modal attention
-        audio_attn, _ = self.audio_attention(
-            audio_proj.transpose(0, 1), 
-            visual_proj.transpose(0, 1), 
-            visual_proj.transpose(0, 1))
-        visual_attn, _ = self.visual_attention(
-            visual_proj.transpose(0, 1),
-            audio_proj.transpose(0, 1),
-            audio_proj.transpose(0, 1))
+        # Compute attention weights
+        audio_att = F.softmax(cc_mat, dim=1)  # [batchsize, batchsize]
+        visual_att = F.softmax(cc_mat.transpose(0, 1), dim=1)  # [batchsize, batchsize]
         
-        audio_attn = audio_attn.transpose(0, 1)
-        visual_attn = visual_attn.transpose(0, 1)
+        # Apply attention
+        atten_audiofeatures = torch.matmul(audio_att, audio_feat)  # [batchsize, dim]
+        atten_visualfeatures = torch.matmul(visual_att, visual_feat)  # [batchsize, dim]
         
-        # Residual connections
-        audio_out = audio_proj + audio_attn
-        visual_out = visual_proj + visual_attn
+        # Residual connection
+        atten_audiofeatures = atten_audiofeatures + audio_feat
+        atten_visualfeatures = atten_visualfeatures + visual_feat
         
-        # Dynamic modality weighting
-        weights = F.softmax(self.modality_weights, dim=0)
-        fused = torch.cat([
-            weights[0] * audio_out,
-            weights[1] * visual_out
-        ], dim=-1)
+        # Concatenate and project
+        fused_features = self.project_bottleneck(torch.cat((atten_audiofeatures,
+                                                          atten_visualfeatures), dim=1))
         
-        return self.bottleneck(fused)
+        return fused_features
 
 class EnhancedDeceptionDetector(nn.Module):
     """
@@ -79,70 +67,100 @@ class EnhancedDeceptionDetector(nn.Module):
         for param in self.audio_encoder.parameters():
             param.requires_grad = False  # Freeze pretrained model
             
+        for layer in self.audio_encoder.encoder.layers[-2:]:
+          for param in layer.parameters():
+            param.requires_grad = True
+            
         # Audio adapter layers
         self.audio_adapter = nn.ModuleList([
             nn.Sequential(
-                nn.Linear(1024, 256),
+                nn.Linear(768, 512),
+                nn.LayerNorm(512),
                 nn.GELU(),
-                nn.Linear(256, 1024))
+                nn.Dropout(0.2),
+                nn.Linear(512, 768))
             for _ in range(num_encoders)])
         
         # Visual encoder (MAE-ViT)
         self.visual_encoder = ViTMAEModel.from_pretrained("facebook/vit-mae-base")
         for param in self.visual_encoder.parameters():
             param.requires_grad = False  # Freeze pretrained model
+        for block in self.visual_encoder.encoder.layer[-2:]:
+            for param in block.parameters():
+                param.requires_grad = True
             
         # Visual adapter layers
         self.visual_adapter = nn.ModuleList([
             nn.Sequential(
-                nn.Linear(768, 256),
+                nn.Linear(768, 512),
+                nn.LayerNorm(512),
                 nn.GELU(),
-                nn.Linear(256, 768))
+                nn.Dropout(0.2),
+                nn.Linear(512, 768))
             for _ in range(num_encoders)])
-        
         # Fusion modules
         self.fusion_layers = nn.ModuleList([
-            ImprovedCrossFusionModule(dim=256)
+            ImprovedCrossFusionModule(dim=512)
             for _ in range(num_encoders)])
         
         # Classifier
         self.classifier = nn.Sequential(
-            nn.Linear(256 * num_encoders, 128),
+            nn.Linear(64 * num_encoders, 256),
+            nn.LayerNorm(256),
+            nn.GELU(),
+            nn.Dropout(0.4),
+            nn.Linear(256, 128),
             nn.GELU(),
             nn.Dropout(0.3),
             nn.Linear(128, 2))
         
         # Positional embeddings for visual tokens
-        self.visual_pos_embed = nn.Parameter(torch.randn(1, 64, 768))
+        self.visual_pos_embed = nn.Parameter(torch.randn(1, 50, 768))
+        
+        nn.init.trunc_normal_(self.visual_pos_embed, std=0.02)
+        
+        # Capa de atención temporal para audio
+        self.audio_temp_attention = nn.MultiheadAttention(768, 8, dropout=0.1)
+        
+        # Regularización
+        self.dropout = nn.Dropout(0.1)
         
     def forward(self, audio_input, visual_input):
-        # Audio processing
-        audio_features = self.audio_encoder(audio_input).last_hidden_state
+        # Audio processing con atención temporal
+        audio_outputs = self.audio_encoder(audio_input)
+        audio_features = audio_outputs.last_hidden_state  # (batch_size, seq_len, 768)
+        audio_features = audio_features.permute(1, 0, 2)  # (seq_len, batch_size, 768)
+        audio_features, _ = self.audio_temp_attention(audio_features, audio_features, audio_features)
+        audio_features = audio_features.permute(1, 0, 2)  # (batch_size, seq_len, 768)
         
         # Visual processing
         b, t, c, h, w = visual_input.shape
         visual_input = visual_input.view(b * t, c, h, w)
-        visual_features = self.visual_encoder(visual_input).last_hidden_state
-        visual_features = visual_features.view(b, t, -1) + self.visual_pos_embed
+        visual_outputs = self.visual_encoder(visual_input)
+        visual_features = visual_outputs.last_hidden_state  # (b*t, seq_len, 768)
+        visual_features = visual_features.view(b, t, -1, 768)  # (b, t, seq_len, 768)
+        visual_features = visual_features + self.visual_pos_embed.unsqueeze(1)
         
-        # Adapter processing and fusion
+        # Procesamiento multimodal
         fusion_outputs = []
         for i in range(len(self.fusion_layers)):
-            # Apply adapters
-            audio_adapted = self.audio_adapter[i](audio_features)
-            visual_adapted = self.visual_adapter[i](visual_features)
+            # Atención temporal en lugar de mean pooling
+            audio_pooled = audio_features.mean(dim=1)  # Temporalmente, mantener mean pooling
+            audio_adapted = self.audio_adapter[i](self.dropout(audio_pooled))
             
-            # Fusion
+            visual_pooled = visual_features.mean(dim=(1, 2))
+            visual_adapted = self.visual_adapter[i](self.dropout(visual_pooled))
+            
+            # Fusión
             fused = self.fusion_layers[i](audio_adapted, visual_adapted)
             fusion_outputs.append(fused)
         
-        # Combine fusion outputs
-        combined = torch.cat(fusion_outputs, dim=-1)
+        combined = torch.cat(fusion_outputs, dim=1)  # Asegurar concatenación correcta
         
-        # Classification
-        logits = self.classifier(combined.mean(dim=1))
+        # Clasificación
+        logits = self.classifier(combined)
         
-        return logits
+        return logits, None, None
 
 # Example usage
 if __name__ == '__main__':
@@ -153,7 +171,7 @@ if __name__ == '__main__':
     
     # Test inputs
     audio_sample = torch.randn(2, 16000).to(device)  # Batch of 2 audio clips
-    video_sample = torch.randn(2, 64, 3, 224, 224).to(device)  # Batch of 2 video clips (64 frames each)
+    video_sample = torch.randn(2, 64, 3, 160, 160).to(device)  # Batch of 2 video clips (64 frames each)
     
     # Forward pass
     outputs = model(audio_sample, video_sample)

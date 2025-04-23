@@ -12,6 +12,7 @@ from dataloader.audio_visual_dataset import AudioVisualDataset, af_collate_fn
 
 from models.audio_model import W2V2_Model
 from models.fusion_model import Fusion
+from models.improved_model import EnhancedDeceptionDetector
 # pip install torch metrics
 from sklearn.metrics import classification_report, accuracy_score, f1_score, roc_curve, auc
 
@@ -361,8 +362,7 @@ def train_test(log_name, args):
             model = ViT_model(args.num_encoders, args.adapter, args.adapter_type)
             model.to(args.device)
         else:
-            model = Fusion(args.fusion_type, args.num_encoders, args.adapter,
-                           args.adapter_type, args.multi)
+            model = EnhancedDeceptionDetector(args.num_encoders)
             model.to(args.device)
         print("\t Model Loaded")
 

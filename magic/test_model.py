@@ -12,6 +12,7 @@ from dataloader.audio_visual_dataset import AudioVisualDataset, af_collate_fn
 from models.audio_model import W2V2_Model
 from models.fusion_model import Fusion
 from models.visual_model import ViT_model
+from models.improved_model import EnhancedDeceptionDetector
 
 def load_model(args, model_path):
     """Carga el modelo entrenado según los parámetros guardados."""
@@ -20,7 +21,7 @@ def load_model(args, model_path):
     elif args.model_to_train == 'vision':
         model = ViT_model(args.num_encoders, args.adapter, args.adapter_type)
     else:  # fusion
-        model = Fusion(args.fusion_type, args.num_encoders, args.adapter, args.adapter_type, args.multi)
+        model = EnhancedDeceptionDetector()
     
     model.load_state_dict(torch.load(model_path))
     model.to(args.device)

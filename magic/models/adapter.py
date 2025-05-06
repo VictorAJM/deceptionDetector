@@ -119,3 +119,58 @@ class vit_adapter_conv(nn.Module):
         mhsa = self.adapter_norm1(mhsa)
         ffn = self.mlp(mhsa) + mhsa + self.ffn_conv_pass(mhsa)
         return self.adapter_norm2(ffn)
+
+
+# models/adapter.py (Nuevo)
+def wavlm_adapter_nlp(transformer_encoder):
+    # Configuración del adaptador estilo NLP para WavLM
+    class WavLMAdapter(nn.Module):
+        def __init__(self, original_layer):
+            super().__init__()
+            self.original_layer = original_layer
+            # Congelar capa original
+            for p in original_layer.parameters():
+                p.requires_grad = False
+            # Adapter NLP (bottleneck)
+            self.adapter_down = nn.Linear(768, 64)  # Proyección down
+            self.adapter_up = nn.Linear(64, 768)    # Proyección up
+            self.activation = nn.GELU()
+            
+        def forward(self, x):
+            # Forward original
+            orig_out = self.original_layer(x)
+            # Proceso del adaptador
+            h = self.adapter_down(orig_out[0] if isinstance(orig_out, tuple) else orig_out)
+            h = self.activation(h)
+            h = self.adapter_up(h)
+            # Suma residual
+            return orig_out + h
+            
+    return WavLMAdapter(transformer_encoder)
+
+def wavlm_adapter_conv(transformer_encoder):
+    # Configuración del adaptador convolucional para WavLM
+    class WavLMConvAdapter(nn.Module):
+        def __init__(self, original_layer):
+            super().__init__()
+            self.original_layer = original_layer
+            # Congelar capa original
+            for p in original_layer.parameters():
+                p.requires_grad = False
+            # Adapter convolucional
+            self.conv = nn.Sequential(
+                nn.Conv1d(768, 64, kernel_size=3, padding=1),
+                nn.GELU(),
+                nn.Conv1d(64, 768, kernel_size=1)
+            )
+            
+        def forward(self, x):
+            # Forward original
+            orig_out = self.original_layer(x)
+            # Proceso del adaptador (permute para conv1d)
+            x_conv = (orig_out[0] if isinstance(orig_out, tuple) else orig_out).permute(0, 2, 1)
+            h = self.conv(x_conv).permute(0, 2, 1)
+            # Suma residual
+            return orig_out + h
+            
+    return WavLMConvAdapter(transformer_encoder)

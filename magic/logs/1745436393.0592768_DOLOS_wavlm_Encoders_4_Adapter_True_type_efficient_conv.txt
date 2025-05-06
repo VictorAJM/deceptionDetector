@@ -1,0 +1,47 @@
+
+Optimizer and LR = Adam, 0.001
+Batch Size = 16
+Epochs = 30
+Num Encoders = 4
+Adapter = True
+Adapter Type = efficient_conv
+Resume Training: True
+------------------------------------------
+------------------------------------------
+
+Train file = train_fold3
+Test file = test_fold3epoch 8, test_acc 0.50938, test_f1: 0.32967, test_auc:0.54973
+epoch 9, test_acc 0.56032, test_f1: 0.71821, test_auc:0.50000
+epoch 10, test_acc 0.46917, test_f1: 0.22047, test_auc:0.51516
+epoch 11, test_acc 0.56032, test_f1: 0.71821, test_auc:0.50000
+epoch 12, test_acc 0.56032, test_f1: 0.71821, test_auc:0.50000
+epoch 13, test_acc 0.56032, test_f1: 0.71821, test_auc:0.50000
+epoch 14, test_acc 0.56032, test_f1: 0.71821, test_auc:0.50000
+epoch 15, test_acc 0.56032, test_f1: 0.71821, test_auc:0.50000
+epoch 16, test_acc 0.44236, test_f1: 0.00952, test_auc:0.50239
+epoch 17, test_acc 0.56032, test_f1: 0.71821, test_auc:0.50000
+epoch 18, test_acc 0.56032, test_f1: 0.71821, test_auc:0.50000
+epoch 19, test_acc 0.56300, test_f1: 0.71150, test_auc:0.50830
+epoch 20, test_acc 0.56032, test_f1: 0.71821, test_auc:0.50000
+epoch 21, test_acc 0.56032, test_f1: 0.71821, test_auc:0.50000
+epoch 22, test_acc 0.45308, test_f1: 0.20930, test_auc:0.49752
+epoch 23, test_acc 0.56032, test_f1: 0.71821, test_auc:0.50000
+epoch 24, test_acc 0.56032, test_f1: 0.71821, test_auc:0.50000
+epoch 25, test_acc 0.56032, test_f1: 0.71821, test_auc:0.50000
+epoch 26, test_acc 0.56032, test_f1: 0.71821, test_auc:0.50000
+epoch 27, test_acc 0.49866, test_f1: 0.43505, test_auc:0.51981
+epoch 28, test_acc 0.55228, test_f1: 0.69358, test_auc:0.50398
+epoch 29, test_acc 0.43968, test_f1: 0.00000, test_auc:0.50000
+****************
+best results are acc 0.56300, f1: 0.71150, auc:0.50830 
+
+              precision    recall  f1-score   support
+
+       truth       0.53      0.05      0.10       164
+   deception       0.56      0.96      0.71       209
+
+    accuracy                           0.56       373
+   macro avg       0.55      0.51      0.41       373
+weighted avg       0.55      0.56      0.44       373
+
+

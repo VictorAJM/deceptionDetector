@@ -1,0 +1,10 @@
+
+Optimizer and LR = Adam, 0.0001
+Batch Size = 16
+Epochs = 40
+Num Encoders = 4
+Adapter = True
+Adapter Type = efficient_conv
+Resume Training: True
+------------------------------------------
+------------------------------------------

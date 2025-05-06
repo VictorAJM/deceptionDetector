@@ -12,7 +12,6 @@ class WavLM_Model(nn.Module):
         self.adapter_type = adapter_type
 
         model = torchaudio.pipelines.WAV2VEC2_BASE.get_model()
-        # Congelar todos los parámetros inicialmente
         for param in model.parameters():
             param.requires_grad = False
 

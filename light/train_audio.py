@@ -44,7 +44,7 @@ model.to(device)
 
 # Optimizador y configuración
 optimizer = optim.Adam(model.parameters(), lr=2e-5)
-num_epochs = 5
+num_epochs = 15
 
 # Entrenamiento
 for epoch in range(num_epochs):

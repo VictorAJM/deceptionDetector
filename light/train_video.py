@@ -43,6 +43,7 @@ for epoch in range(3):
     total_loss = 0
     all_preds, all_labels = [], []
     for idx, batch in enumerate(train_loader):
+        if idx > 5: continue
         videos, labels = batch
         videos = videos.to(device)
         labels = labels.to(device)

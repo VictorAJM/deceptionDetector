@@ -39,7 +39,8 @@ test_loader = DataLoader(test_dataset, batch_size=8, shuffle=False)
 
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-config = VideoMAEConfig.from_pretrained("MCG-NJU/videomae-base")
+config = VideoMAEConfig.from_pretrained("MCG-NJU/videomae-base", output_hidden_states=True)
+
 config.num_channels = 3
 config.image_size = 224 
 config.num_frames = 32

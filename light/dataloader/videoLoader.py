@@ -41,6 +41,5 @@ class LieDetectionVideoDataset(Dataset):
             image = Image.open(img_path).convert("RGB")
             frames.append(self.transforms(image))
         
-        frames = torch.stack(frames)  # (T, C, H, W)
-
+        frames = torch.stack(frames)
         return frames, label

@@ -17,17 +17,18 @@ data_root = "C:/Users/victo/deceptionDetector/dataset/DOLOS/"
 train_anno = data_root + 'Training_Protocols/' + train
 test_anno = data_root + 'Training_Protocols/' + test
 
-train_dataset = LieDetectionVideoDataset(train_anno, img_dir, num_frames=16)
-test_dataset = LieDetectionVideoDataset(test_anno, img_dir, num_frames=16)
+train_dataset = LieDetectionVideoDataset(train_anno, img_dir, num_frames=32)
+test_dataset = LieDetectionVideoDataset(test_anno, img_dir, num_frames=32)
 
 # Cargar datos
-train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True)  # Batch size reducido
-test_loader = DataLoader(test_dataset, batch_size=16, shuffle=False)
+train_loader = DataLoader(train_dataset, batch_size=8, shuffle=True)  # Batch size reducido
+test_loader = DataLoader(test_dataset, batch_size=8, shuffle=False)
 # Model & setup
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 config = VideoMAEConfig.from_pretrained("MCG-NJU/videomae-base")
 config.num_channels = 3
-config.image_size = 224  # Asegurar tamaño correcto
+config.image_size = 224 
+config.num_frames = 32
 
 model = VideoMAEForVideoClassification.from_pretrained(
     "MCG-NJU/videomae-base",

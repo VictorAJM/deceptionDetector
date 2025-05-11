@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 
 class MultimodalLieDetector(nn.Module):
-    def __init__(self, video_model, audio_model):
+    def __init__(self, video_model, audio_model, dropout_prob=0.5):
         super().__init__()
         self.video_model = video_model
         self.audio_model = audio_model
@@ -14,8 +14,8 @@ class MultimodalLieDetector(nn.Module):
         # Combine the hidden sizes from both models
         combined_hidden_size = self.video_model.config.hidden_size + self.audio_model.config.hidden_size
         
-        # Classifier for combined features
-        self.classifier = nn.Linear(combined_hidden_size, 2)
+        self.dropout = nn.Dropout(dropout_prob)  # Añadido Dropout
+        self.classifier = nn.Linear(video_model.config.hidden_size + audio_model.config.hidden_size, 2)
 
     def forward(self, video_inputs, audio_inputs):
         # Get video features
@@ -28,5 +28,6 @@ class MultimodalLieDetector(nn.Module):
 
 
         combined_features = torch.cat((video_features, audio_features), dim=1)
+        combined_features = self.dropout(combined_features)
         logits = self.classifier(combined_features)
         return logits

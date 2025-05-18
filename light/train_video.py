@@ -8,14 +8,11 @@ from dataloader.videoLoader import LieDetectionVideoDataset
 from transformers import VideoMAEForVideoClassification, VideoMAEFeatureExtractor, VideoMAEConfig
 import torch.nn as nn
 
-
-
-train, test = ['train_fold3.csv', 'test_fold3.csv']
 img_dir = "C:/Users/victo/deceptionDetector/dataset/face_frames/"
 data_root = "C:/Users/victo/deceptionDetector/dataset/DOLOS/"
 
-train_anno = data_root + 'Training_Protocols/' + train
-test_anno = data_root + 'Training_Protocols/' + test
+train_anno = "C:/Users/victo/deceptionDetector/dataset/train.csv"
+test_anno = "C:/Users/victo/deceptionDetector/dataset/test.csv"
 
 train_dataset = LieDetectionVideoDataset(train_anno, img_dir, num_frames=32)
 test_dataset = LieDetectionVideoDataset(test_anno, img_dir, num_frames=32)

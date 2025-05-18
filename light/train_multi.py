@@ -16,13 +16,13 @@ model_name = "MultimodalLieDetector"
 output_dir = "model_checkpoints"
 os.makedirs(output_dir, exist_ok=True)
 
-train, test = ['train_fold3.csv', 'test_fold3.csv']
+
 img_dir = "C:/Users/victo/deceptionDetector/dataset/face_frames/"
 wav_dir = "C:/Users/victo/deceptionDetector/dataset/audio_files/"
 data_root = "C:/Users/victo/deceptionDetector/dataset/DOLOS/"
 
-train_anno = data_root + 'Training_Protocols/' + train
-test_anno = data_root + 'Training_Protocols/' + test
+train_anno = "C:/Users/victo/deceptionDetector/dataset/train.csv"
+test_anno = "C:/Users/victo/deceptionDetector/dataset/test.csv"
 
 train_dataset = LieDetectionMultimodalDataset(train_anno, wav_dir, img_dir, num_frames=24, frame_size=224)
 test_dataset = LieDetectionMultimodalDataset(test_anno, wav_dir, img_dir, num_frames=24, frame_size=224)

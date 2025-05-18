@@ -11,20 +11,23 @@ import csv
 
 def build_labels_dict(csv_path):
     labels_dict = {}
-    with open(csv_path, 'r') as f:
+    with open(csv_path, 'r', newline='') as f:
         reader = csv.reader(f)
         for row in reader:
-            filename = row[0].strip() + ".wav"
-            label = 1 if row[1].strip().lower() == "deception" else 0
+            # row[1] is your unique segment name, e.g. “YW_WILTY_EP49_lie4”
+            filename = row[1].strip() + ".wav"
+            # row[4] is your label (“lie” or “truth”)
+            label = 1 if row[4].strip().lower() == "lie" else 0
             labels_dict[filename] = label
     return labels_dict
+
 
 train, test = ['train_fold3.csv', 'test_fold3.csv']
 wav_dir = "C:/Users/victo/deceptionDetector/dataset/audio_files/"
 data_root = "C:/Users/victo/deceptionDetector/dataset/DOLOS/"
 
-train_anno = data_root + 'Training_Protocols/' + train
-test_anno = data_root + 'Training_Protocols/' + test
+train_anno = "C:/Users/victo/deceptionDetector/dataset/train.csv"
+test_anno = "C:/Users/victo/deceptionDetector/dataset/test.csv"
 
 train_labels_dict = build_labels_dict(train_anno)
 test_labels_dict = build_labels_dict(test_anno)

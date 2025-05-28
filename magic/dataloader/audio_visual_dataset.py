@@ -13,7 +13,11 @@ class AudioVisualDataset(Dataset):
     def __init__(self, annotations_file, audio_dir, img_dir, num_tokens=64, frame_size=224):
         super(AudioVisualDataset, self).__init__()
 
-        self.annos = pd.read_csv(annotations_file)  # [file_name, label, gender]
+        self.annos = pd.read_csv(
+            annotations_file,
+            header=None,
+            names=["video_id", "clip_name", "start", "end", "label"]
+        )
         self.audio_dir = audio_dir  # all files in '.wav' format
         self.num_tokens = num_tokens
 
@@ -34,7 +38,8 @@ class AudioVisualDataset(Dataset):
     def __getitem__(self, idx):
 
         # select one clip
-        clip_name = self.annos.iloc[idx, 0]
+        row = self.annos.iloc[idx]
+        clip_name = row['clip_name'].strip()
         # get audio path
         audio_path = os.path.join(self.audio_dir, clip_name + '.wav')
 
@@ -73,14 +78,9 @@ class AudioVisualDataset(Dataset):
         face_frames.type(torch.float32)
 
         # assign integer to labels
-        str_label = self.annos.iloc[idx, 1]
-        if str_label == 'truth' or str_label == 'truthful' or str_label == 0:
-            label = 0
-        elif str_label == 'deception' or str_label == 'lie' or str_label == 1:
-            label = 1
-        # undefined label error
-        else:
-            raise Exception("undefined label")
+        raw_label = row['label'].strip().lower()
+        # 1 for lie, 0 for truth
+        label = 1 if raw_label == 'lie' else 0
 
         return waveform, face_frames, label
 

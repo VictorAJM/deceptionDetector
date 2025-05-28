@@ -1,6 +1,6 @@
 CUDA_VISIBLE_DEVICES=0 python train_test.py \
-  --batch_size=16 \
-  --model_to_train "wavlm" \
+  --batch_size=8 \
+  --model_to_train "fusion" \
   --fusion_type "cross2" \
   --adapter \
   --num_encoders=4 \
@@ -8,7 +8,6 @@ CUDA_VISIBLE_DEVICES=0 python train_test.py \
   --num_epochs=40 \
   --lr=1e-4 \
   --seed=123 \
-  --resume \
   --data_root 'C:/Users/victo/deceptionDetector/dataset/DOLOS/' \
   --audio_path 'C:/Users/victo/deceptionDetector/dataset/audio_files/' \
   --visual_path 'C:/Users/victo/deceptionDetector/dataset/face_frames/'

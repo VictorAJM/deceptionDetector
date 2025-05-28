@@ -1,0 +1,22 @@
+         Started Training
+epoch 0, train_acc 0.54286, train_f1: 0.66492, train_auc:0.50051 test_acc 0.57619, test_f1: 0.71746, test_auc:0.52229
+epoch 1, train_acc 0.55119, train_f1: 0.66959, train_auc:0.50990 test_acc 0.55238, test_f1: 0.71166, test_auc:0.49153
+epoch 2, train_acc 0.56190, train_f1: 0.70081, train_auc:0.50513 test_acc 0.56667, test_f1: 0.71827, test_auc:0.50783
+epoch 3, train_acc 0.57619, train_f1: 0.69151, train_auc:0.53315 test_acc 0.57143, test_f1: 0.71519, test_auc:0.51686
+                 Epoch.... 5
+epoch 4, train_acc 0.56905, train_f1: 0.67621, train_auc:0.53221 test_acc 0.56667, test_f1: 0.72171, test_auc:0.50543
+epoch 5, train_acc 0.60833, train_f1: 0.71760, train_auc:0.56404 test_acc 0.57619, test_f1: 0.67399, test_auc:0.54744
+epoch 6, train_acc 0.59881, train_f1: 0.69557, train_auc:0.56455 test_acc 0.56667, test_f1: 0.65134, test_auc:0.54495
+epoch 7, train_acc 0.57619, train_f1: 0.65703, train_auc:0.55363 test_acc 0.56667, test_f1: 0.72171, test_auc:0.50543
+epoch 8, train_acc 0.61190, train_f1: 0.69187, train_auc:0.58659 test_acc 0.59048, test_f1: 0.55208, test_auc:0.61045
+                 Epoch.... 10
+epoch 9, train_acc 0.60595, train_f1: 0.68204, train_auc:0.58351 test_acc 0.62381, test_f1: 0.64574, test_auc:0.62574
+epoch 10, train_acc 0.64881, train_f1: 0.70993, train_auc:0.63153 test_acc 0.58571, test_f1: 0.72381, test_auc:0.53196
+epoch 11, train_acc 0.62500, train_f1: 0.69856, train_auc:0.60226 test_acc 0.60476, test_f1: 0.69373, test_auc:0.57765
+epoch 12, train_acc 0.65476, train_f1: 0.70468, train_auc:0.64379 test_acc 0.63333, test_f1: 0.72792, test_auc:0.59948
+epoch 13, train_acc 0.62500, train_f1: 0.69208, train_auc:0.60614 test_acc 0.58095, test_f1: 0.66154, test_auc:0.56006
+                 Epoch.... 15
+epoch 14, train_acc 0.66310, train_f1: 0.71897, train_auc:0.64789 test_acc 0.57143, test_f1: 0.63115, test_auc:0.55997
+epoch 15, train_acc 0.63214, train_f1: 0.69676, train_auc:0.61415 test_acc 0.62381, test_f1: 0.68526, test_auc:0.60897
+iter 1/105, loss 0.71331
+
